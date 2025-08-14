@@ -1,0 +1,43 @@
+.Count-container {
+  border: 2px solid rebeccapurple;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:  auto;
+  background-color: #615e5e;
+  margin: 50px 0;
+  .Count-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    border: 1px solid red;
+    flex: 0 0 50%;
+    width: 70%;
+
+    gap: 2rem;
+
+    h2,
+    p,
+    label,button {
+      color: white;
+    }
+
+    .add,.delete{
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .add button{
+        background-color: rgb(49, 189, 49);
+    }
+    .delete button{
+        background-color: red
+    }
+
+    .resetNum{
+        background-color: orange;
+    }
+  }
+}
