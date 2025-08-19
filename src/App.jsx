@@ -7,7 +7,7 @@ import PostViewer from "./components/PostViewer/PostViewer";
 function App() {
   return (
     <div>
-      {/* <Carousell /> */}
+      <Carousell />
       <Counts />
 
       <PostViewer />
