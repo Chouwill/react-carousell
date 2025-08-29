@@ -1,136 +1,72 @@
 import { useState, useEffect } from "react";
-import { getPlaceholder } from "../../api/method";
-import "./PostViewer.scss";
-
 export default function PostViewer() {
-  let data = document.querySelector(".main-Posts");
-  let nextPageBtn = document.querySelector(".nextPageBtn");
-  let returnPageBtn = document.querySelector(".returnPageBtn");
-  let page = document.querySelector(".page");
-  let [postTexts, setPosts] = useState([]);
+  const [allPosts, setPosts] = useState([]);
 
-  let [startValue, setStart] = useState(0);
+  const [page, setPages] = useState(1);
+  const itemsGroup = 10;
 
-  let [rangeValue, setRange] = useState(10);
-
-  let [pageNum, setPages] = useState(1);
-
-  const [totalPage] = useState(10);
-
-  let [mainStatus, setStatus] = useState(false);
-
-  let [spacingNum, setSpacing] = useState(10);
-  console.log(Array.isArray(postTexts, setPosts));
   const getPosts = async () => {
     try {
-      let res = await getPlaceholder();
+      const res = await fetch("https://jsonplaceholder.typicode.com/posts");
 
-      //   console.log(res);
+      console.log(res);
 
-      setPosts((postTexts = res.data));
+      const data = await res.json();
 
-      // console.log("api回傳:", postTexts);
+      console.log(data);
+
+      setPosts(data);
     } catch (e) {
-      // console.log(e);
+      console.log(e);
     }
   };
 
-  const showData = () => {
-    console.log(data);
+  function showPosts() {
+    const startIndex = (page - 1) * itemsGroup;
 
-    console.log("data狀態", data);
-    console.log("start", startValue); // start 值
-    console.log("range", rangeValue); // range 值
+    console.log("起始值", startIndex);
 
-    data.style = "display:block";
-    nextPageBtn.style = "display:block";
-    returnPageBtn.style = "display:none";
-    page.style = "display:block";
-  };
+    const endIndex = startIndex + itemsGroup;
+
+    console.log(endIndex);
+
+    // return setPosts(allPosts.slice(startIndex, endIndex));
+  }
+
+  function nextPage() {
+    setPages((value) => value + 1);
+    showPosts();
+  }
+  function returnPage() {
+    setPages((value) => value - 1);
+    showPosts();
+  }
 
   useEffect(() => {
     getPosts();
   }, []);
 
-  const nextPage = () => {
-    setPages(pageNum + 1);
-    console.log("start", setStart(startValue + spacingNum)); // start 值
-    console.log("range", setRange(rangeValue + spacingNum)); // range 值
-
-    console.log("00000", postTexts);
-    let nextPageBtn = document.querySelector(".nextPageBtn");
-    // let showButton = document.querySelector(".showButton");
-    console.log(nextPageBtn);
-
-    console.log("起始：", startValue, "終值：", rangeValue);
-
-    if (startValue == 80) {
-      setPages((pageNum = 10));
-      setStart((startValue = 90));
-      setRange((rangeValue = 100));
-      console.log("沒有第0頁");
-      nextPageBtn.style = "display:none";
-      returnPageBtn.style = "display:block";
-    }
-  };
-
-  const returnPage = () => {
-    setPages(pageNum - 1);
-    console.log("start", setStart(startValue - spacingNum)); // start 值
-    console.log("range", setRange(rangeValue - spacingNum)); // range 值
-    let returnPage = document.querySelector(".returnPage");
-
-    console.log("00000", postTexts);
-
-    console.log("起始：", startValue, "終值：", rangeValue);
-
-    if (rangeValue === 0) {
-      setPages((pageNum = 1));
-      setStart((startValue = 0));
-      setRange((rangeValue = 10));
-      console.log("沒有第0頁");
-      returnPage.style = "display:none";
-      nextPageBtn.style = "display:none";
-    } else {
-      nextPageBtn.style = "display:block";
-    }
-  };
+  //   const isShowNext = (page + 1) * itemsGroup <= allPosts.length;
+  const isShowNext = Math.ceil(allPosts.length / itemsGroup) > page;
+  const isShowReturn = page > 1;
 
   return (
     <div>
-      <div className="Post-container">
-        <h2>PostViewer</h2>
-        <button className="showButton" onClick={showData}>
-          檢視資料筆數
-        </button>
-        <h2 className="page">
-          目前頁數{pageNum}/{totalPage}
-        </h2>
-        <div className="page-conrol">
-          <button className="nextPageBtn" onClick={nextPage}>
-            下一頁
-          </button>
-          <button className="returnPageBtn" onClick={returnPage}>
-            上一頁
-          </button>
-        </div>
+      <button onClick={showPosts}>輪播</button>
+      {isShowNext && <button onClick={nextPage}>下一頁</button>}
+      {isShowReturn && <button onClick={returnPage}>上一頁</button>}
+      <h2>文章輪播器</h2>
 
-        <div className="main-Posts">
-          {postTexts.slice(startValue, rangeValue).map((item) => {
-            return (
-              <div className="postItem" key={item.id}>
-                <div className="title">
-                  <p>{item.id}.</p>
-                  <p>{item.title}</p>
-                </div>
-                <div className="text">
-                  <p>{item.body}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {allPosts
+        .slice((page - 1) * itemsGroup, page * itemsGroup)
+        .map((item) => {
+          return (
+            <div>
+              <p>{item.id}</p>
+              <p>{item.title}</p>
+            </div>
+          );
+        })}
     </div>
   );
 }

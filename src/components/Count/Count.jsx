@@ -3,20 +3,20 @@ import React, { useState } from "react";
 import "./Count.scss";
 
 export default function Counts() {
-  let [num, setNum] = useState(0);
+  const [num, setNum] = useState(0);
 
-  let [addinputNum, addinputSetNum] = useState(0);
-  let [deleteinputNum, deleteinputSetNum] = useState(0);
+  const [addinputNum, addinputSetNum] = useState(0);
+  const [deleteinputNum, deleteinputSetNum] = useState(0);
 
   function getaddValue(e) {
     console.log(typeof e.target.value);
 
-    addinputSetNum((addinputNum = parseInt(e.target.value)));
+    addinputSetNum(parseInt(e.target.value));
   }
   function getdeleteValue(e) {
     console.log(e.target.value);
 
-    deleteinputSetNum((deleteinputNum =parseInt(e.target.value)));
+    deleteinputSetNum(parseInt(e.target.value));
   }
 
   function addNum() {
@@ -26,7 +26,7 @@ export default function Counts() {
     setNum(num - deleteinputNum);
   }
   function resetNum() {
-    setNum((num = 0));
+    setNum(0);
   }
 
   return (
@@ -44,7 +44,7 @@ export default function Counts() {
 
           <div className="delete">
             <label>減號數值：</label>
-            <input type="text" onChange={getdeleteValue} />
+            <input type="number" onChange={getdeleteValue} />
             <button onClick={deleteNum}>-{deleteinputNum}</button>
           </div>
 
