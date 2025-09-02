@@ -6,7 +6,7 @@ export default function MyApp() {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const itemsGroup = 7;
+  const itemsGroup = 6;
 
   const movieArray = [
     { id: 1, date: "12月01日", img: "https://picsum.photos/id/101/300/400" },
@@ -46,10 +46,12 @@ export default function MyApp() {
   }
 
   function nextPage() {
-    setCurrentPage((value) => value + 1);
+    setCurrentPage((value) => value + itemsGroup);
+
+    
   }
   function returnPage() {
-    setCurrentPage((value) => value - 1);
+    setCurrentPage((value) => value - itemsGroup);
   }
 
   const computedData = showlist();
