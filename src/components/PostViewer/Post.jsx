@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./PostViewer.scss";
+// import "./PostViewer.scss";
 
 export default function Post() {
   let [Posts, setPosts] = useState([]); //  儲存文章列表的變數

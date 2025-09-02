@@ -1,72 +1,70 @@
 import { useState, useEffect } from "react";
+
+import { getPlaceholder } from "../../api/method";
+import "./Style.scss";
 export default function PostViewer() {
   const [allPosts, setPosts] = useState([]);
 
-  const [page, setPages] = useState(1);
+  const [Page, setPage] = useState(1);
+
   const itemsGroup = 10;
 
-  const getPosts = async () => {
+  async function getPosts() {
     try {
-      const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+      const res = await getPlaceholder();
+      // console.log(res.data);
 
-      console.log(res);
+      setPosts(res.data);
 
-      const data = await res.json();
-
-      console.log(data);
-
-      setPosts(data);
+      console.log(allPosts);
     } catch (e) {
       console.log(e);
     }
-  };
-
-  function showPosts() {
-    const startIndex = (page - 1) * itemsGroup;
-
-    console.log("起始值", startIndex);
-
-    const endIndex = startIndex + itemsGroup;
-
-    console.log(endIndex);
-
-    // return setPosts(allPosts.slice(startIndex, endIndex));
-  }
-
-  function nextPage() {
-    setPages((value) => value + 1);
-    showPosts();
-  }
-  function returnPage() {
-    setPages((value) => value - 1);
-    showPosts();
   }
 
   useEffect(() => {
     getPosts();
   }, []);
 
-  //   const isShowNext = (page + 1) * itemsGroup <= allPosts.length;
-  const isShowNext = Math.ceil(allPosts.length / itemsGroup) > page;
-  const isShowReturn = page > 1;
+  function showlist() {
+    return allPosts.slice((Page - 1) * itemsGroup, Page * itemsGroup);
+  }
+
+  function nextPage() {
+    setPage((value) => value + 1);
+
+    console.log(Page);
+  }
+  function returnPage() {
+    setPage((value) => value - 1);
+
+    console.log(Page);
+  }
+
+  const computedData = showlist();
+
+  const isReturn = Page > 1;
+
+  const isNext = Page < Math.ceil(allPosts.length / itemsGroup);
 
   return (
     <div>
-      <button onClick={showPosts}>輪播</button>
-      {isShowNext && <button onClick={nextPage}>下一頁</button>}
-      {isShowReturn && <button onClick={returnPage}>上一頁</button>}
       <h2>文章輪播器</h2>
 
-      {allPosts
-        .slice((page - 1) * itemsGroup, page * itemsGroup)
-        .map((item) => {
-          return (
-            <div>
+      {/* <button onClick={getPosts}>-----</button> */}
+      {isNext && <button onClick={nextPage}>下一頁</button>}
+      {isReturn && <button onClick={returnPage}>上一頁</button>}
+      {Page}
+
+      {computedData.map((item) => {
+        return (
+          <div>
+            <div className="Posts">
               <p>{item.id}</p>
-              <p>{item.title}</p>
             </div>
-          );
-        })}
+          </div>
+        );
+      })}
     </div>
   );
 }
